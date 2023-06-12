@@ -35,5 +35,3 @@ export const createNote = async (countValue) => {
   );
   return result;
 };
-const resultInsert = await createNote(10);
-console.log(resultInsert);
