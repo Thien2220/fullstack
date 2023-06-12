@@ -35,3 +35,11 @@ export const createNote = async (countValue) => {
   );
   return result;
 };
+export const delData = async (del) => {
+  const [result] = await pool.query(
+    "DELETE FROM `cinema_booking_system`.`count`    WHERE `id` in (?) ",
+    [del]
+  );
+  return result;
+};
+const dele = await delData(39);
