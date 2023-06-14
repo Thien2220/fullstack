@@ -1,4 +1,13 @@
-import { getNoteByID } from "./database.js";
-const data = await getNoteByID("6 union select * from count");
-
-console.log(data);
+import bodyParser from "body-parser";
+import cors from "cors";
+import express from "express";
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+app.post("/", (req, res) => {
+  console.log(req.body);
+});
+app.listen(3002, () => {});

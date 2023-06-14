@@ -79,7 +79,7 @@ const Authentication = () => {
           </div>
 
           <hr className="mb-4" />
-          <button className="btn btn-primary btn-lg btn-block" type="submit">
+          <button className="btn btn-danger btn-lg btn-block" type="submit">
             Submit
           </button>
         </form>
