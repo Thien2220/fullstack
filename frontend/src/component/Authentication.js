@@ -11,14 +11,8 @@ const Authentication = () => {
       firstname: yup
         .string()
         .trim()
-        .required("firstname không được bỏ trống")
+        .required("password không được bỏ trống")
         .max(5, "tối đa 5 ký tự")
-        .min(2, "ít nhất 2 ký tự"),
-      lastname: yup
-        .string()
-        .trim()
-        .required("last name không được bỏ trống")
-        .max(6, "tối đa 6 ký tự")
         .min(2, "ít nhất 2 ký tự"),
       email: yup
         .string()
@@ -29,15 +23,41 @@ const Authentication = () => {
     onSubmit: (val) => console.log(val),
   });
   return (
-    <div className="container">
-      <div className="col-md-12 mt-5">
+    <div className="container m-auto p-5">
+      <div className="  m-auto   text-center p-5 w-50 bg-dark text-white ">
         <form onSubmit={formik.handleSubmit}>
           <h4 className="mb-3">Personal information</h4>
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="firstname">First name</label>
+          <div className=" ">
+            {/* email */}
+            <div className="mb-3  ">
+              <label htmlFor="email">Email</label>
               <input
-                type="text"
+                type="email"
+                className={
+                  formik.touched.email
+                    ? formik.errors.email
+                      ? "form-control is-invalid"
+                      : "form-control is-valid"
+                    : "form-control"
+                }
+                id="email"
+                name="email"
+                {...formik.getFieldProps("email")}
+                placeholder="you@example.com"
+              />
+              {formik.touched.email ? (
+                formik.errors.email ? (
+                  <p className="text-danger">{formik.errors.email}</p>
+                ) : (
+                  <p className="text-success">email có thể sử dụng</p>
+                )
+              ) : null}
+            </div>
+
+            <div className="  mb-3">
+              <label htmlFor="firstname">password</label>
+              <input
+                type="password"
                 className={
                   formik.touched.firstname
                     ? formik.errors.firstname
@@ -53,59 +73,12 @@ const Authentication = () => {
                 formik.errors.firstname ? (
                   <p className="text-danger">{formik.errors.firstname}</p>
                 ) : (
-                  <p className="text-success">firstname có thể sử dụng</p>
+                  <p className="text-success">password có thể sử dụng</p>
                 )
               ) : null}
             </div>
+          </div>
 
-            <div className="col-md-6 mb-3">
-              <label htmlFor="lastname">Last name</label>
-              <input
-                type="text"
-                className={
-                  formik.touched.lastname
-                    ? formik.errors.lastname
-                      ? "form-control is-invalid"
-                      : "form-control is-valid"
-                    : "form-control"
-                }
-                id="lastname"
-                name="lastname"
-                {...formik.getFieldProps("lastname")}
-              />
-              {formik.touched.lastname ? (
-                formik.errors.lastname ? (
-                  <p className="text-danger">{formik.errors.lastname}</p>
-                ) : (
-                  <p className="text-success">lastname có thể sử dụng</p>
-                )
-              ) : null}
-            </div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              className={
-                formik.touched.email
-                  ? formik.errors.email
-                    ? "form-control is-invalid"
-                    : "form-control is-valid"
-                  : "form-control"
-              }
-              id="email"
-              name="email"
-              {...formik.getFieldProps("email")}
-              placeholder="you@example.com"
-            />
-            {formik.touched.email ? (
-              formik.errors.email ? (
-                <p className="text-danger">{formik.errors.email}</p>
-              ) : (
-                <p className="text-success">email có thể sử dụng</p>
-              )
-            ) : null}
-          </div>
           <hr className="mb-4" />
           <button className="btn btn-primary btn-lg btn-block" type="submit">
             Submit
