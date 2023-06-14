@@ -3,16 +3,15 @@ import * as yup from "yup";
 const Authentication = () => {
   const formik = useFormik({
     initialValues: {
-      firstname: " ",
-      lastname: "",
       email: "",
+      password: " ",
     },
     validationSchema: yup.object({
-      firstname: yup
+      password: yup
         .string()
         .trim()
         .required("password không được bỏ trống")
-        .max(5, "tối đa 5 ký tự")
+        .max(100, "tối đa 100 ký tự")
         .min(2, "ít nhất 2 ký tự"),
       email: yup
         .string()
@@ -23,8 +22,8 @@ const Authentication = () => {
     onSubmit: (val) => console.log(val),
   });
   return (
-    <div className="container m-auto p-5">
-      <div className="  m-auto   text-center p-5 w-50 bg-dark text-white ">
+    <div className="container m-auto p-5 ">
+      <div className="  m-auto  out text-center p-5 w-50 bg-dark text-white ">
         <form onSubmit={formik.handleSubmit}>
           <h4 className="mb-3">Personal information</h4>
           <div className=" ">
@@ -55,23 +54,23 @@ const Authentication = () => {
             </div>
 
             <div className="  mb-3">
-              <label htmlFor="firstname">password</label>
+              <label htmlFor="password">password</label>
               <input
                 type="password"
                 className={
-                  formik.touched.firstname
-                    ? formik.errors.firstname
+                  formik.touched.password
+                    ? formik.errors.password
                       ? "form-control is-invalid"
                       : "form-control is-valid"
                     : "form-control"
                 }
-                id="firstname"
-                name="firstname"
-                {...formik.getFieldProps("firstname")}
+                id="password"
+                name="password"
+                {...formik.getFieldProps("password")}
               />
-              {formik.touched.firstname ? (
-                formik.errors.firstname ? (
-                  <p className="text-danger">{formik.errors.firstname}</p>
+              {formik.touched.password ? (
+                formik.errors.password ? (
+                  <p className="text-danger">{formik.errors.password}</p>
                 ) : (
                   <p className="text-success">password có thể sử dụng</p>
                 )
