@@ -18,6 +18,10 @@ export const getNote = async () => {
 };
 // const data = await getNote();
 // console.log(data);
+export const getNoteByID = async (id) => {
+  const [row] = await pool.execute(`select * from count where id=${id}`);
+  return row;
+};
 export const changeNote = async (val, id) => {
   const [result] = await pool.query(
     "UPDATE  count  SET  countvalue  = ? WHERE (id = ?)",
