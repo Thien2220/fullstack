@@ -8,7 +8,7 @@ const pool = mysql
     host: process.env.sql_host,
     user: "newuser",
     password: "Thien123@",
-    database: "cinema_booking_system",
+    database: "asm2_nodejs",
   })
   .promise();
 
@@ -46,4 +46,11 @@ export const delData = async (del) => {
   );
   return result;
 };
-const dele = await delData(39);
+
+export const createUser = async (gmail, password) => {
+  const [result] = await pool.query(
+    "INSERT INTO `authentication` (`gmail`,password) VALUES ('?','?')",
+    [gmail, password]
+  );
+  return result;
+};
