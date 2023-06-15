@@ -1,8 +1,10 @@
 import { useFormik } from "formik";
-import { useFetcher } from "react-router-dom";
+import { useFetcher, useFetchers } from "react-router-dom";
 import * as yup from "yup";
 const Authentication = () => {
   const fetcher = useFetcher();
+  const fetchers = useFetchers();
+  console.log(fetchers);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -29,6 +31,7 @@ const Authentication = () => {
       );
     },
   });
+
   return (
     <div className="container m-auto p-5 ">
       <div className="  m-auto  out text-center p-5 w-50 bg-dark text-white ">
@@ -110,9 +113,8 @@ export const action = async ({ request }) => {
       body: data,
     });
     const result = await response.json();
-    result.newuser !== "error" && console.log("Success:", result.newuser);
-    result.newuser === "error" && console.log("err");
-    return null;
+    if (result.newuser !== "error") return { data: "ok" };
+    else return { data: "err" };
   } catch (error) {
     console.error("Error:", error);
   }
