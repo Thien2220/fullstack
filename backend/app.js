@@ -1,42 +1,17 @@
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const bodyParser = require("body-parser");
-// get the client
-const mysql = require("mysql2");
-// create the connection to database
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "newuser",
-  password: "Thien123@",
-  database: "cinema_booking_system",
-});
+import bodyParser from "body-parser";
+import cors from "cors";
+import express from "express";
+import { createUser } from "./database.js";
 
+const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-
 app.get("/", (req, res) => {
-  connection.execute(
-    "SELECT countvalue FROM count",
-    function (err, results, fields) {
-      const data = results[0].countvalue;
-      res.send({ x: data });
-    }
-  );
+  res.send("Hello World!");
 });
-app.post("/", (req, res) => {
-  req.body.x === "decs" &&
-    connection.execute(
-      "SELECT countvalue FROM count",
-      function (err, results, fields) {
-        const value = results[0].countvalue + 1;
-        connection.execute(
-          `UPDATE  count SET countvalue = ${value} WHERE (id = 1) `
-        );
-      }
-    );
+app.put("/", async (req, res) => {
+  const newuser = await createUser(req.body.email, req.body.password);
+  console.log(newuser);
+  res.send({ newuser });
 });
-
-app.listen(3002, () => {
-  console.log("Example app listening on port 3002!");
-});
+app.listen(3002, () => {});

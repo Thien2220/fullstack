@@ -1,14 +1,18 @@
-import "./App.css";
 import Home from "./component/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { homeLoader } from "./component/Home";
+import Authentication, {
+  action as actionSubmit,
+} from "./component/Authentication";
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
+      element: <Authentication />,
       loader: homeLoader,
+      action: actionSubmit,
     },
+    { path: "/home", element: <Home /> },
   ]);
   return (
     <div className="App">
