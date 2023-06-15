@@ -1,13 +1,16 @@
 import Home from "./component/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { homeLoader } from "./component/Home";
-import Authentication from "./component/Authentication";
+import Authentication, {
+  action as actionSubmit,
+} from "./component/Authentication";
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Authentication />,
       loader: homeLoader,
+      action: actionSubmit,
     },
     { path: "/home", element: <Home /> },
   ]);

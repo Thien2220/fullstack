@@ -1,6 +1,8 @@
 import { useFormik } from "formik";
+import { useFetcher } from "react-router-dom";
 import * as yup from "yup";
 const Authentication = () => {
+  const fetcher = useFetcher();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -19,12 +21,18 @@ const Authentication = () => {
         .required("email không được bỏ trống")
         .email("email không hợp lệ"),
     }),
-    onSubmit: (val) => console.log(val),
+    onSubmit: (val) => {
+      console.log(val);
+      fetcher.submit(
+        { data: JSON.stringify(val) },
+        { method: "PUT", action: "/" }
+      );
+    },
   });
   return (
     <div className="container m-auto p-5 ">
       <div className="  m-auto  out text-center p-5 w-50 bg-dark text-white ">
-        <form onSubmit={formik.handleSubmit}>
+        <fetcher.Form onSubmit={formik.handleSubmit}>
           <h4 className="mb-3">Personal information</h4>
           <div className=" ">
             {/* email */}
@@ -82,9 +90,30 @@ const Authentication = () => {
           <button className="btn btn-danger btn-lg btn-block" type="submit">
             Submit
           </button>
-        </form>
+        </fetcher.Form>
       </div>
     </div>
   );
 };
 export default Authentication;
+
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const data = await formData.get("data");
+  console.log(data);
+  try {
+    const response = await fetch("http://localhost:3002/", {
+      method: "PUT", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data,
+    });
+    const result = await response.json();
+    result.newuser !== "error" && console.log("Success:", result.newuser);
+    result.newuser === "error" && console.log("err");
+    return null;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

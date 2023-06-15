@@ -9,9 +9,9 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-app.post("/", (req, res) => {
-  console.log(req.body);
+app.put("/", async (req, res) => {
+  const newuser = await createUser(req.body.email, req.body.password);
+  console.log(newuser);
+  res.send({ newuser });
 });
 app.listen(3002, () => {});
-
-const newuser = createUser;

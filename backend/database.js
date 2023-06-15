@@ -48,9 +48,13 @@ export const delData = async (del) => {
 };
 
 export const createUser = async (gmail, password) => {
-  const [result] = await pool.query(
-    "INSERT INTO `authentication` (`gmail`,password) VALUES ('?','?')",
-    [gmail, password]
-  );
-  return result;
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO `authentication` (gmail,password) VALUES (?,?)",
+      [gmail, password]
+    );
+    return result.insertId;
+  } catch (error) {
+    return "error";
+  }
 };
