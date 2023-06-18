@@ -19,10 +19,7 @@ app.put("/login", async (req, res) => {
   console.log(loginUser);
   res.send({ loginUser });
 });
-app.get("/clickemail", (req, res) => {
-  console.log(123);
-  res.send({ click: "" });
-});
+
 // const login = await checkUser("lengocthien288220@gmail.com", 1111111);
 // console.log(login);
 app.listen(3002, () => {});

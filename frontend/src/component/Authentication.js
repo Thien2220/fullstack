@@ -62,9 +62,11 @@ const Authentication = () => {
                 type="email"
                 className={
                   formik.touched.email
-                    ? formik.errors.email
-                      ? "form-control is-invalid"
-                      : "form-control is-valid"
+                    ? !formik.errors.email &&
+                      (fetcher.data === "success" ||
+                        fetcher.data === "login success")
+                      ? "form-control is-valid"
+                      : "form-control is-invalid"
                     : "form-control"
                 }
                 {...formik.getFieldProps("email")}
