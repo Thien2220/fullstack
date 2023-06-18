@@ -44,7 +44,9 @@ const Authentication = () => {
         { method: "put", action: "/" }
       );
   };
-
+  const clickEmailHandler = () => {
+    fetcher.submit({ data: "click" }, { method: "post", action: "/" });
+  };
   return (
     <div className="container m-auto p-5 ">
       <div className="  m-auto  out text-center p-5 w-50 bg-dark text-white ">
@@ -56,6 +58,7 @@ const Authentication = () => {
               <label htmlFor="email">Email</label>
               <input
                 id="email"
+                onClick={clickEmailHandler}
                 type="email"
                 className={
                   formik.touched.email
@@ -139,30 +142,33 @@ export default Authentication;
 export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = await formData.get("data");
-  console.log(data);
-  const status = JSON.parse(formData.get("data")).status;
-  console.log(status);
-  try {
-    const response = await fetch(`http://localhost:3002/${status}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data,
-    });
-    const result = await response.json();
-    if (status === "sigup") {
-      return result.newuser;
-    }
-    if (status === "login") {
-      console.log(result.loginUser);
-      if (result.loginUser > 0) {
-        return "login success";
-      } else {
-        return "sai tài khoản hoặc mật khẩu";
+  if (data === "click") {
+    return null;
+  } else {
+    const status = JSON.parse(formData.get("data")).status;
+    console.log(status);
+    try {
+      const response = await fetch(`http://localhost:3002/${status}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: data,
+      });
+      const result = await response.json();
+      if (status === "sigup") {
+        return result.newuser;
       }
+      if (status === "login") {
+        console.log(result.loginUser);
+        if (result.loginUser > 0) {
+          return "login success";
+        } else {
+          return "sai tài khoản hoặc mật khẩu";
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
-  } catch (error) {
-    console.error("Error:", error);
   }
 };
