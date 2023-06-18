@@ -53,8 +53,16 @@ export const createUser = async (gmail, password) => {
       "INSERT INTO `authentication` (gmail,password) VALUES (?,?)",
       [gmail, password]
     );
-    return result.insertId;
+    return "success";
   } catch (error) {
-    return "error";
+    if (error.errno === 1062) return "email đã tồn tại";
   }
+};
+
+export const checkUser = async (email, pass) => {
+  const [result] = await pool.query(
+    `SELECT  count(*) as x FROM  authentication where gmail=? and password =?`,
+    [email, pass]
+  );
+  return result[0].x;
 };

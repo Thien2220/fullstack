@@ -1,10 +1,9 @@
 import { useFormik } from "formik";
-import { useFetcher, useFetchers } from "react-router-dom";
+import { useFetcher } from "react-router-dom";
 import * as yup from "yup";
+
 const Authentication = () => {
   const fetcher = useFetcher();
-  const fetchers = useFetchers();
-  console.log(fetchers);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -23,14 +22,28 @@ const Authentication = () => {
         .required("email không được bỏ trống")
         .email("email không hợp lệ"),
     }),
-    onSubmit: (val) => {
-      console.log(val);
+  });
+  // arr save password invalid to check in email alert
+  const sigupHandler = () => {
+    const nOb = { ...formik.values };
+    nOb.status = "sigup";
+    console.log(nOb);
+    formik.errors.email === undefined &&
       fetcher.submit(
-        { data: JSON.stringify(val) },
+        { data: JSON.stringify(nOb) },
         { method: "PUT", action: "/" }
       );
-    },
-  });
+  };
+  const loginHandler = () => {
+    const nOb = { ...formik.values };
+    nOb.status = "login";
+    console.log(nOb);
+    formik.errors.email === undefined &&
+      fetcher.submit(
+        { data: JSON.stringify(nOb) },
+        { method: "put", action: "/" }
+      );
+  };
 
   return (
     <div className="container m-auto p-5 ">
@@ -42,6 +55,7 @@ const Authentication = () => {
             <div className="mb-3  ">
               <label htmlFor="email">Email</label>
               <input
+                id="email"
                 type="email"
                 className={
                   formik.touched.email
@@ -50,23 +64,34 @@ const Authentication = () => {
                       : "form-control is-valid"
                     : "form-control"
                 }
-                id="email"
-                name="email"
                 {...formik.getFieldProps("email")}
                 placeholder="you@example.com"
               />
+              <p
+                className={
+                  formik.errors.email === undefined && fetcher.data
+                    ? fetcher.data === "success" ||
+                      fetcher.data === "login success"
+                      ? "text-success"
+                      : "text-danger"
+                    : null
+                }
+              >
+                {formik.errors.email === undefined && fetcher.data
+                  ? fetcher.data
+                  : null}
+              </p>
               {formik.touched.email ? (
                 formik.errors.email ? (
                   <p className="text-danger">{formik.errors.email}</p>
-                ) : (
-                  <p className="text-success">email có thể sử dụng</p>
-                )
+                ) : null
               ) : null}
             </div>
 
             <div className="  mb-3">
               <label htmlFor="password">password</label>
               <input
+                id="password"
                 type="password"
                 className={
                   formik.touched.password
@@ -75,8 +100,6 @@ const Authentication = () => {
                       : "form-control is-valid"
                     : "form-control"
                 }
-                id="password"
-                name="password"
                 {...formik.getFieldProps("password")}
               />
               {formik.touched.password ? (
@@ -90,9 +113,22 @@ const Authentication = () => {
           </div>
 
           <hr className="mb-4" />
-          <button className="btn btn-danger btn-lg btn-block" type="submit">
-            Submit
-          </button>
+          <div className="row justify-content-between">
+            <button
+              className="btn col-4 btn-danger btn-lg btn-block"
+              type="button"
+              onClick={sigupHandler}
+            >
+              Sig Up
+            </button>
+            <button
+              className="col-4 btn btn-danger btn-lg"
+              type="button"
+              onClick={loginHandler}
+            >
+              log In
+            </button>
+          </div>
         </fetcher.Form>
       </div>
     </div>
@@ -104,17 +140,28 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = await formData.get("data");
   console.log(data);
+  const status = JSON.parse(formData.get("data")).status;
+  console.log(status);
   try {
-    const response = await fetch("http://localhost:3002/", {
-      method: "PUT", // or 'PUT'
+    const response = await fetch(`http://localhost:3002/${status}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: data,
     });
     const result = await response.json();
-    if (result.newuser !== "error") return { data: "ok" };
-    else return { data: "err" };
+    if (status === "sigup") {
+      return result.newuser;
+    }
+    if (status === "login") {
+      console.log(result.loginUser);
+      if (result.loginUser > 0) {
+        return "login success";
+      } else {
+        return "sai tài khoản hoặc mật khẩu";
+      }
+    }
   } catch (error) {
     console.error("Error:", error);
   }
