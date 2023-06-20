@@ -55,7 +55,7 @@ export const createUser = async (gmail, password) => {
     );
     return "success";
   } catch (error) {
-    if (error.errno === 1062) return "email đã tồn tại";
+    if (error.errno === 1062) return "exist";
   }
 };
 

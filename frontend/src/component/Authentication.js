@@ -4,6 +4,7 @@ import * as yup from "yup";
 
 const Authentication = () => {
   const fetcher = useFetcher();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -48,97 +49,111 @@ const Authentication = () => {
     fetcher.submit({ data: "click" }, { method: "post", action: "/" });
   };
   return (
-    <div className="container m-auto p-5 ">
-      <div className="  m-auto  out text-center p-5 w-50 bg-dark text-white ">
-        <fetcher.Form onSubmit={formik.handleSubmit}>
-          <h4 className="mb-3">Personal information</h4>
-          <div className=" ">
-            {/* email */}
-            <div className="mb-3  ">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                onClick={clickEmailHandler}
-                type="email"
-                className={
-                  formik.touched.email
-                    ? !formik.errors.email &&
-                      (fetcher.data === "success" ||
-                        fetcher.data === "login success")
-                      ? "form-control is-valid"
-                      : "form-control is-invalid"
-                    : "form-control"
-                }
-                {...formik.getFieldProps("email")}
-                placeholder="you@example.com"
-              />
-              <p
-                className={
-                  formik.errors.email === undefined && fetcher.data
-                    ? fetcher.data === "success" ||
-                      fetcher.data === "login success"
-                      ? "text-success"
-                      : "text-danger"
-                    : null
-                }
+    <>
+      <div className="m-4 p-5  "> </div>
+      <div className="container m-auto p-5  ">
+        <div className="  m-auto  out text-center p-5 w-50 bg-dark text-white ">
+          <fetcher.Form onSubmit={formik.handleSubmit}>
+            <h2 className="mb-3">Sigup & Login </h2>
+            <div className=" ">
+              {/* email */}
+              <div className="mb-3   ">
+                <label htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  onClick={clickEmailHandler}
+                  type="email"
+                  className={
+                    (fetcher.data !== undefined && fetcher.data.status) === null
+                      ? "form-control"
+                      : formik.touched.email
+                      ? !formik.errors.email &&
+                        ((fetcher.data !== undefined && fetcher.data.status) ===
+                          "success" ||
+                          (fetcher.data !== undefined &&
+                            fetcher.data.status) === "login success")
+                        ? "form-control is-valid"
+                        : "form-control is-invalid"
+                      : "form-control"
+                  }
+                  {...formik.getFieldProps("email")}
+                  placeholder="you@example.com"
+                />
+                <p
+                  className={
+                    formik.errors.email === undefined &&
+                    fetcher.data !== undefined &&
+                    fetcher.data.status
+                      ? (fetcher.data !== undefined && fetcher.data.status) ===
+                          "success" ||
+                        (fetcher.data !== undefined && fetcher.data.status) ===
+                          "login success"
+                        ? "text-success"
+                        : "text-danger"
+                      : null
+                  }
+                >
+                  {formik.errors.email === undefined &&
+                  fetcher.data !== undefined &&
+                  fetcher.data.status
+                    ? fetcher.data !== undefined && fetcher.data.status
+                    : null}
+                </p>
+                {formik.touched.email ? (
+                  formik.errors.email ? (
+                    <p className="text-danger">{formik.errors.email}</p>
+                  ) : null
+                ) : null}
+              </div>
+
+              <div className="  mb-3">
+                <label htmlFor="password">password</label>
+                <input
+                  id="password"
+                  type="password"
+                  className={
+                    formik.touched.password
+                      ? formik.errors.password
+                        ? "form-control is-invalid"
+                        : "form-control is-valid"
+                      : "form-control"
+                  }
+                  {...formik.getFieldProps("password")}
+                />
+                {formik.touched.password ? (
+                  formik.errors.password ? (
+                    <p className="text-danger">{formik.errors.password}</p>
+                  ) : (
+                    <p className="text-success">password có thể sử dụng</p>
+                  )
+                ) : null}
+              </div>
+            </div>
+
+            <hr className="mb-4" />
+            <div className="row justify-content-between">
+              <button
+                className="btn col-4 btn-danger btn-lg btn-block"
+                type="button"
+                onClick={sigupHandler}
               >
-                {formik.errors.email === undefined && fetcher.data
-                  ? fetcher.data
-                  : null}
-              </p>
-              {formik.touched.email ? (
-                formik.errors.email ? (
-                  <p className="text-danger">{formik.errors.email}</p>
-                ) : null
-              ) : null}
+                Sig Up
+              </button>
+              <button
+                className="col-4 btn btn-danger btn-lg"
+                type="button"
+                onClick={loginHandler}
+              >
+                log In
+              </button>
             </div>
-
-            <div className="  mb-3">
-              <label htmlFor="password">password</label>
-              <input
-                id="password"
-                type="password"
-                className={
-                  formik.touched.password
-                    ? formik.errors.password
-                      ? "form-control is-invalid"
-                      : "form-control is-valid"
-                    : "form-control"
-                }
-                {...formik.getFieldProps("password")}
-              />
-              {formik.touched.password ? (
-                formik.errors.password ? (
-                  <p className="text-danger">{formik.errors.password}</p>
-                ) : (
-                  <p className="text-success">password có thể sử dụng</p>
-                )
-              ) : null}
-            </div>
-          </div>
-
-          <hr className="mb-4" />
-          <div className="row justify-content-between">
-            <button
-              className="btn col-4 btn-danger btn-lg btn-block"
-              type="button"
-              onClick={sigupHandler}
-            >
-              Sig Up
-            </button>
-            <button
-              className="col-4 btn btn-danger btn-lg"
-              type="button"
-              onClick={loginHandler}
-            >
-              log In
-            </button>
-          </div>
-        </fetcher.Form>
+          </fetcher.Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
+
 export default Authentication;
 
 export const action = async ({ request }) => {
@@ -158,17 +173,8 @@ export const action = async ({ request }) => {
         body: data,
       });
       const result = await response.json();
-      if (status === "sigup") {
-        return result.newuser;
-      }
-      if (status === "login") {
-        console.log(result.loginUser);
-        if (result.loginUser > 0) {
-          return "login success";
-        } else {
-          return "sai tài khoản hoặc mật khẩu";
-        }
-      }
+      console.log(result);
+      return result;
     } catch (error) {
       console.error("Error:", error);
     }
