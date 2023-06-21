@@ -4,7 +4,6 @@ import * as yup from "yup";
 
 const Authentication = () => {
   const fetcher = useFetcher();
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -13,10 +12,10 @@ const Authentication = () => {
     validationSchema: yup.object({
       password: yup
         .string()
-        .trim()
+        .trim("das")
         .required("password không được bỏ trống")
         .max(100, "tối đa 100 ký tự")
-        .min(2, "ít nhất 2 ký tự"),
+        .min(4, "ít nhất 4 ký tự"),
       email: yup
         .string()
         .trim()
@@ -28,7 +27,6 @@ const Authentication = () => {
   const sigupHandler = () => {
     const nOb = { ...formik.values };
     nOb.status = "sigup";
-    console.log(nOb);
     formik.errors.email === undefined &&
       fetcher.submit(
         { data: JSON.stringify(nOb) },
@@ -38,7 +36,6 @@ const Authentication = () => {
   const loginHandler = () => {
     const nOb = { ...formik.values };
     nOb.status = "login";
-    console.log(nOb);
     formik.errors.email === undefined &&
       fetcher.submit(
         { data: JSON.stringify(nOb) },
@@ -64,14 +61,14 @@ const Authentication = () => {
                   onClick={clickEmailHandler}
                   type="email"
                   className={
-                    (fetcher.data !== undefined && fetcher.data.status) === null
+                    (fetcher.data !== undefined && fetcher.data) === "click"
                       ? "form-control"
                       : formik.touched.email
                       ? !formik.errors.email &&
                         ((fetcher.data !== undefined && fetcher.data.status) ===
                           "success" ||
                           (fetcher.data !== undefined &&
-                            fetcher.data.status) === "login success")
+                            fetcher.data.status) === "đăng nhập thành công")
                         ? "form-control is-valid"
                         : "form-control is-invalid"
                       : "form-control"
@@ -87,7 +84,7 @@ const Authentication = () => {
                       ? (fetcher.data !== undefined && fetcher.data.status) ===
                           "success" ||
                         (fetcher.data !== undefined && fetcher.data.status) ===
-                          "login success"
+                          "đăng nhập thành công"
                         ? "text-success"
                         : "text-danger"
                       : null
@@ -111,6 +108,7 @@ const Authentication = () => {
                 <input
                   id="password"
                   type="password"
+                  pattern="[A-Za ]+"
                   className={
                     formik.touched.password
                       ? formik.errors.password
@@ -160,10 +158,10 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = await formData.get("data");
   if (data === "click") {
-    return null;
+    return "click";
   } else {
     const status = JSON.parse(formData.get("data")).status;
-    console.log(status);
+    // console.log(status);
     try {
       const response = await fetch(`http://localhost:3002/${status}`, {
         method: "PUT",

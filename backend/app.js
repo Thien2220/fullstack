@@ -14,7 +14,10 @@ app.get("/", (req, res) => {
   });
 });
 app.put("/sigup", async (req, res) => {
-  const signup = await createUser(req.body.email, req.body.password);
+  const signup = await createUser(
+    req.body.email,
+    req.body.password.replace(/\s+/g, "")
+  );
   let token;
   let resStatus;
   let status;
@@ -38,10 +41,30 @@ app.put("/sigup", async (req, res) => {
   //send client token, status, res(status).json
 });
 app.put("/login", async (req, res) => {
-  const loginUser = await checkUser(req.body.email, req.body.password);
-  console.log(loginUser);
-  res.send({ loginUser });
+  const loginUser = await checkUser(
+    req.body.email,
+    req.body.password.replace(/\s+/g, "")
+  );
+  let token;
+  let resStatus;
+  let status;
+  if (loginUser > 0) {
+    resStatus = 200;
+    status = "đăng nhập thành công";
+    token = Jwt.sign(
+      {
+        email: req.body.email,
+      },
+      "secret_keykhdhkhkashdfádasdhhádask",
+      { expiresIn: 60 * 60 }
+    );
+  } else {
+    resStatus = 403;
+    token = null;
+    status = "sai tài khoản hoặc mật khẩu";
+  }
+  res.status(resStatus).send({ loginUser, token, status });
 });
-// const login = await checkUser("lengocthien288220@gmail.com", 1111111);
-// console.log(login);
+// console.log(" asd sdg a ".replace(/\s+/g, "").length);
 app.listen(3002, () => {});
+// console.log("asdkh kh s".indexOf(" "));
