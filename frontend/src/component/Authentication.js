@@ -4,6 +4,7 @@ import * as yup from "yup";
 
 const Authentication = () => {
   const fetcher = useFetcher();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -162,16 +163,24 @@ export const action = async ({ request }) => {
   } else {
     const status = JSON.parse(formData.get("data")).status;
     // console.log(status);
+    let token;
+    if (localStorage.getItem("token")) {
+      token = localStorage.getItem("token");
+    } else {
+      token = "";
+    }
     try {
       const response = await fetch(`http://localhost:3002/${status}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          token: token,
         },
         body: data,
       });
       const result = await response.json();
       console.log(result);
+      result.token && localStorage.setItem("token", result.token);
       return result;
     } catch (error) {
       console.error("Error:", error);
